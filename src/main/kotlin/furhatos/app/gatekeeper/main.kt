@@ -1,9 +1,9 @@
-package furhatos.app.quiz
+package furhatos.app.gatekeeper
 
 import furhatos.flow.kotlin.Flow
 import furhatos.skills.Skill
 
-class Quiz : Skill() {
+class Gatekeeper : Skill() {
     override fun start() {
         Flow().run(Idle)
     }

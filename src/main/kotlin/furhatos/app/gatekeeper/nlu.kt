@@ -1,4 +1,4 @@
-package furhatos.app.quiz
+package furhatos.app.gatekeeper
 
 import furhatos.nlu.EnumEntity
 import furhatos.nlu.EnumItem

@@ -1,9 +1,7 @@
-package furhatos.app.quiz
+package furhatos.app.gatekeeper
 
-import furhatos.nlu.EnumEntity
 import furhatos.nlu.EnumItem
 import furhatos.nlu.TextBuilder
-import furhatos.util.Language
 import java.util.*
 
 val questions = mutableListOf(

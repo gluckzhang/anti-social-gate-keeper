@@ -1,4 +1,4 @@
-package furhatos.app.quiz
+package furhatos.app.gatekeeper
 
 import furhatos.flow.kotlin.*
 import furhatos.flow.kotlin.voice.PollyVoice
