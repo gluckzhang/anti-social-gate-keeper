@@ -24,4 +24,5 @@ repositories {
 
 dependencies {
 	compile 'com.furhatrobotics.furhatos:furhat-commons:1.4.1'
+	compile 'org.apache.commons:commons-email:1.4'
 }
