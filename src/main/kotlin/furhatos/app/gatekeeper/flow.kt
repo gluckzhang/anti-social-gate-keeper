@@ -64,7 +64,7 @@ fun QueryPurpose(user : User) = state(parent = Interaction) {
     onResponse<WelcomedPurpose> {
         furhat.say("Sure!")
         furhat.say("I'll notify the master right away!")
-        send(names.get(user.id), it.text)
+        send(names.get(user.id), it.text, "Acceptable")
         goto(WelcomedExit(user))
     }
 
@@ -104,7 +104,7 @@ fun SendMessage (user : User) = state(parent = Interaction) {
     onResponse {
         System.out.println(names.get(user.id))
         System.out.println(it.text)
-        send(names.get(user.id), it.text)
+        send(names.get(user.id), it.text, "Unknown")
         goto(UnwantedExit)
     }
 }
