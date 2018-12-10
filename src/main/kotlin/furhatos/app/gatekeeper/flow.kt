@@ -3,11 +3,8 @@ package furhatos.app.gatekeeper
 import furhatos.flow.kotlin.*
 import furhatos.flow.kotlin.voice.PollyVoice
 import furhatos.gestures.Gestures
+import furhatos.nlu.common.*
 import furhatos.util.Language
-import furhatos.nlu.common.Goodbye
-import furhatos.nlu.common.No
-import furhatos.nlu.common.RequestRepeat
-import furhatos.nlu.common.Yes
 import furhatos.records.User
 import furhatos.util.Gender
 
@@ -69,11 +66,6 @@ val Idle: State = state {
             furhat.attend(it)
             goto(QueryPerson(it))
         }
-        // Once no more user, start the game with all interested users
-        if (!users.playing().isEmpty()) {
-            furhat.attend(users.playing().first())
-            goto(NewGame)
-        }
     }
 
     onUserEnter(instant = true) {
@@ -81,54 +73,47 @@ val Idle: State = state {
             Other interested users would already be greeted at this point.
             If not, we glance at the user and keep doing whatever we were doing.
          */
-        if (users.interested().count() == 1) {
-            furhat.attend(it.id)
-            furhat.say("Hello there")
-            goto(QueryPerson(it))
-        } else {
-            furhat.glance(it.id, async=true)
-        }
+        furhat.attend(it.id)
+        furhat.say("Hello!")
+        goto(QueryPerson(it))
     }
 
     onUserLeave(instant = true) {
-        if (users.count > 0) {
-            furhat.attend(users.other)
-        } else {
-            furhat.attendNobody()
-        }
+        furhat.say("Thanks for your visit, goodbye!")
     }
 }
 
 fun QueryPerson(user: User) = state(parent = Interaction) {
     onEntry {
-        if (!user.quiz.played) {
-            furhat.ask("Do you want to play?")
-        } else {
-            furhat.ask("Do you want to play again? Maybe you can beat your old score of ${user.quiz.lastScore}")
-        }
+        furhat.ask("Please say your name?")
     }
 
-    onResponse<Yes> {
-        user.quiz.playing = true
-        furhat.say("great!")
+    onResponse<Master> {
+        furhat.say("Hello master!")
         goto(Idle)
     }
 
-    onResponse<No> {
-        user.quiz.interested = false
-        furhat.say("oh well")
-        goto(Idle)
+    onResponse {
+        goto(QueryPurpose)
     }
 
 }
 
-val NewGame = state(parent = Interaction) {
+val QueryPurpose = state(parent = Interaction) {
     onEntry {
-        playing = true
-        rounds = 0
-        furhat.say("Alright, here we go!")
-        QuestionSet.next()
-        goto(AskQuestion)
+        furhat.ask("What's the purpose of your visit?")
+    }
+
+    onResponse<UnwantedPurpose> {
+        furhat.say("Thanks for your visit.")
+        furhat.say("I'll let the master know when he has time!")
+        goto(Idle)
+    }
+
+    onResponse<WelcomedPurpose> {
+        furhat.say("Sure!")
+        furhat.say("I'll notify the master right away!")
+        goto(Idle)
     }
 }
 
